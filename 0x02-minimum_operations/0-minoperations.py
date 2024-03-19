@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """Defines a method to calculate the fewest operations needed."""
 
+
 def minOperations(n):
     """
     Calculate the fewest operations for exactly n H characters.
