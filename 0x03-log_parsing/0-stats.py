@@ -24,11 +24,11 @@ if __name__ == '__main__':
                 status_code = data[-2]
                 if status_code in stats:
                     stats[status_code] += 1
-            except IndexError:
+            except BaseException:
                 pass
             try:
                 filesize += int(data[-1])
-            except IndexError:
+            except BaseException:
                 pass
             if count % 10 == 0:
                 print_stats(stats, filesize)
