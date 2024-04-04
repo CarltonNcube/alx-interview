@@ -4,6 +4,17 @@
 Defines a method to determine a valid UTF-8 encoding.
 """
 
+
+def get_leading_set_bits(num):
+    """returns the number of leading set bits (1)"""
+    set_bits = 0
+    helper = 1 << 7
+    while helper & num:
+        set_bits += 1
+        helper = helper >> 1
+    return set_bits
+
+
 def validUTF8(data):
     """
     Determine if a given data set represents a valid UTF-8 encoding.
@@ -14,25 +25,19 @@ def validUTF8(data):
     Returns:
     - True if data is a valid UTF-8 encoding, else False
     """
-    num_bytes_to_follow = 0
-    
-    for byte in data:
-        byte = bin(byte)[2:].zfill(8)
-        
-        if num_bytes_to_follow == 0:
-            if byte.startswith('0'):
+    bits_count = 0
+    for i in range(len(data)):
+        if bits_count == 0:
+            bits_count = get_leading_set_bits(data[i])
+            '''1-byte (format: 0xxxxxxx)'''
+            if bits_count == 0:
                 continue
-            elif byte.startswith('110'):
-                num_bytes_to_follow = 1
-            elif byte.startswith('1110'):
-                num_bytes_to_follow = 2
-            elif byte.startswith('11110'):
-                num_bytes_to_follow = 3
-            else:
+            '''a character in UTF-8 can be 1 to 4 bytes long'''
+            if bits_count == 1 or bits_count > 4:
                 return False
         else:
-            if not byte.startswith('10'):
+            '''checks if current byte has format 10xxxxxx'''
+            if not (data[i] & (1 << 7) and not (data[i] & (1 << 6))):
                 return False
-            num_bytes_to_follow -= 1
-    
-    return num_bytes_to_follow == 0
+        bits_count -= 1
+    return bits_count == 0
