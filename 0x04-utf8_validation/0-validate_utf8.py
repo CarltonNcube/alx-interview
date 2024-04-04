@@ -1,37 +1,40 @@
 #!/usr/bin/python3
+"""
+Defines a method which determine a valid UTF-8 encoding.
+"""
+
 
 def validUTF8(data):
     """
     Determine if a given data set represents a valid UTF-8 encoding.
 
     Args:
-    - data: list of integers representing 1 byte of data each
+        data (list): List of integers representing 1 byte of data each.
 
     Returns:
-    - True if data is a valid UTF-8 encoding, else False
+        bool: True if data is a valid UTF-8 encoding, else False.
     """
-    # Helper function to count leading set bits
-    def count_leading_set_bits(byte):
-        count = 0
-        mask = 1 << 7
-        while byte & mask:
-            count += 1
-            mask >>= 1
-        return count
-    
-    num_bytes_to_follow = 0
-    
-    for byte in data:
-        if num_bytes_to_follow == 0:
-            leading_bits = count_leading_set_bits(byte)
-            if leading_bits == 0:
+    n_bytes = 0
+    msb_mask = 1 << 7
+    two_msb_mask = 1 << 6
+
+    for num in data:
+        mask = msb_mask
+
+        if n_bytes == 0:
+            while mask & num:
+                n_bytes += 1
+                mask = mask >> 1
+
+            if n_bytes == 0:
                 continue
-            if leading_bits == 1 or leading_bits > 4:
+
+            if n_bytes == 1 or n_bytes > 4:
                 return False
-            num_bytes_to_follow = leading_bits - 1
         else:
-            if not (byte & (1 << 7) and not (byte & (1 << 6))):
+            if not (num & msb_mask and not (num & two_msb_mask)):
                 return False
-            num_bytes_to_follow -= 1
-    
-    return num_bytes_to_follow == 0
+
+        n_bytes -= 1
+
+    return n_bytes == 0
