@@ -1,40 +1,28 @@
 #!/usr/bin/node
-// This script fetches and prints all characters of a Star Wars movie
+// This script fetches and prints characters of a Star Wars movie
 
 const request = require('request');
 
-const movieId = process.argv[2];
-const apiUrl = `https://swapi.dev/api/films/${movieId}/`;
-
-request(apiUrl, (error, response, body) => {
-  if (error) {
-    console.error('Error:', error);
-    return;
-  }
-
-  if (response.statusCode !== 200) {
-    console.error('Invalid status code:', response.statusCode);
-    return;
-  }
-
-  const filmData = JSON.parse(body);
-  const characters = filmData.characters;
-
-  characters.forEach(characterUrl => {
-    request(characterUrl, (charError, charResponse, charBody) => {
-      if (charError) {
-        console.error('Error:', charError);
-        return;
-      }
-
-      if (charResponse.statusCode !== 200) {
-        console.error('Invalid status code:', charResponse.statusCode);
-        return;
-      }
-
-      const characterData = JSON.parse(charBody);
-      console.log(characterData.name);
-    });
+const req = (arr, i) => {
+  if (i === arr.length) return;
+  request(arr[i], (err, response, body) => {
+    if (err) {
+      throw err;
+    } else {
+      console.log(JSON.parse(body).name);
+      req(arr, i + 1);
+    }
   });
-});
+};
 
+request(
+  `https://swapi-api.hbtn.io/api/films/${process.argv[2]}`,
+  (err, response, body) => {
+    if (err) {
+      throw err;
+    } else {
+      const chars = JSON.parse(body).characters;
+      req(chars, 0);
+    }
+  }
+);
