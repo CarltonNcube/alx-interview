@@ -1,19 +1,19 @@
 #!/usr/bin/python3
-"""Module for makeChange method"""
+"""Module for makeChange"""
 
 def makeChange(coins, total):
-    """Determine the fewest coins needed to meet a given amount total.
-    
+    """Determine fewest coins needed to meet a given amount.
+
     Args:
-        coins (list): The values of the coins in your possession
-        total (int): The total amount to meet
+        coins (list): Values of the coins in your possession
+        total (int): Total amount to meet
 
     Returns:
-        int: fewest number of coins needed to meet total
+        int: Fewest number of coins needed to meet total
     """
     if total <= 0:
         return 0
-    dp = [0] + [float("inf")] * (total)
+    dp = [0] + [float("inf")] * total
     for coin in coins:
         for i in range(coin, total + 1):
             dp[i] = min(dp[i], dp[i - coin] + 1)
