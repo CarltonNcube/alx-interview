@@ -1,10 +1,16 @@
 #!/usr/bin/python3
-"""Change comes from within"""
-
+"""Module for makeChange method"""
 
 def makeChange(coins, total):
-    """determine the fewest number of coins needed to
-    meet a given amount total."""
+    """Determine the fewest coins needed to meet a given amount total.
+    
+    Args:
+        coins (list): The values of the coins in your possession
+        total (int): The total amount to meet
+
+    Returns:
+        int: fewest number of coins needed to meet total
+    """
     if total <= 0:
         return 0
     dp = [0] + [float("inf")] * (total)
