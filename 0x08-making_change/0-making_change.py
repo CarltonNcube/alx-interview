@@ -3,13 +3,12 @@
 
 
 def makeChange(coins, total):
-    """Initialize dp array with total+1 (an impossible value)"""
-    dp = [total + 1] * (total + 1)
-
-    dp[0] = 0
-
+    """determine the fewest number of coins needed to
+    meet a given amount total."""
+    if total <= 0:
+        return 0
+    dp = [0] + [float("inf")] * (total)
     for coin in coins:
-        for x in range(coin, total + 1):
-            dp[x] = min(dp[x], dp[x - coin] + 1)
-
-    return -1 if dp[total] > total else dp[total]
+        for i in range(coin, total + 1):
+            dp[i] = min(dp[i], dp[i - coin] + 1)
+    return dp[-1] if dp[-1] != float("inf") else -1
