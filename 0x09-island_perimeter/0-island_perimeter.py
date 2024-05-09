@@ -10,24 +10,17 @@ def island_perimeter(grid):
     Returns:
     int: The perimeter of the island.
     """
-    rows = len(grid)
-    cols = len(grid[0])
-    perimeter = 0
+     def edges(matrix):
+        count = 0
+        for row in matrix:
+            row = [0] + row + [0]
+            for i in range(1, len(row)):
+                count += row[i] != row[i-1]
+        return count
 
-    for i in range(rows):
-        for j in range(cols):
-            if grid[i][j] == 1:
-                # Check top
-                if i == 0 or grid[i-1][j] == 0:
-                    perimeter += 1
-                # Check bottom
-                if i == rows-1 or grid[i+1][j] == 0:
-                    perimeter += 1
-                # Check left
-                if j == 0 or grid[i][j-1] == 0:
-                    perimeter += 1
-                # Check right
-                if j == cols-1 or grid[i][j+1] == 0:
-                    perimeter += 1
+    tgrid = [[] for _ in range(len(grid[0]))]
+    for row in grid:
+        for i, item in enumerate(row):
+            tgrid[i].append(item)
 
-    return perimeter
+    return edges(grid) + edges(tgrid)
