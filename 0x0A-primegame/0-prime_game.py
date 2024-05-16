@@ -76,5 +76,4 @@ def rm_multiples(ls, x):
         try:
             ls[i * x] = 0
         except (ValueError, IndexError):
-            break  # Change all the comments
-
+            break
